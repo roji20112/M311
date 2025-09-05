@@ -999,7 +999,7 @@ class FF_CLIENT(threading.Thread):
             2: {
                 1: 3084379829,#clan id
                 2: 1,
-                4: str("FtU5xOoqf5xAxkf/8SDK7Q"),#clan key
+                4: str("0E78sn+8ThO0A0uO/5AgCQ"),#clan key
             }
         }
         packet = create_protobuf_packet(fields)
