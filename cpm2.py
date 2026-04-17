@@ -5,7 +5,7 @@ TOKEN = os.getenv("7415148537:AAHC9RSt6Ka4Ip34qTCleHx0YXtfGaERwIA")
 
 bot = telebot.TeleBot(TOKEN)
 
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=['m31'])
 def start(message):
     bot.reply_to(message, "البوت خدام 🔥")
 
