@@ -2,5 +2,3 @@ pyTelegramBotAPI
 requests
 flask
 python-dotenv
-pycryptodome
-base64
